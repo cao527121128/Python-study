@@ -250,6 +250,8 @@ def index1(request):
     students_list = Students.objects.all()
     num1 = 10
     num2 = 10
-    return render(request,'myApp/index1.html',{"num":10,"stu":student,"students":students_list,"num1":num1,"num2":num2})
+    str = "Linuxcao is a nice man"
+    return render(request,'myApp/index1.html',{"num":10,"stu":student,"students":students_list,"num1":num1,"num2":num2,
+                                               "str":str})
 
 
