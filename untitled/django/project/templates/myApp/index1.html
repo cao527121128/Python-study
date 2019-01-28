@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    <h1>Linuxcao is a good man</h1>
+    <h1>{{num}}</h1>
+    <h1>{{stu.sname}}</h1>
+    <h1>{{stu.getName}}</h1>
+
+    {% if num %}
+    <h1>Linuxcao is a nice man</h1>
+    {% endif %}
+
+    <u1>
+    {% for stu in students %}
+        <li>
+            {{forloop.counter}}--{{stu.sname}}--{{stu.sgrade}}
+        </li>
+     {% empty %}
+        <li>目前没有学生</li>
+     {% endfor %}
+    </u1>
+
+    {%comment%}
+    注释语句
+    {%endcomment%}
+
+    {% ifequal num1 num2 %}
+    <h1>num1 = num2</h1>
+    {% endifequal %}
+
+
+</body>
+</html>
