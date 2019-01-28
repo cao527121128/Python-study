@@ -28,6 +28,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^sunck/', include('myApp.urls',namespace="myApp")),
+    url(r'^sunck/', include('myApp.urls',namespace="app")),
 ]
 

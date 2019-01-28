@@ -33,7 +33,30 @@
     {% endifequal %}
 
     <h1>{{str | upper}}</h1>
+    <h1>{{str}}</h1>
 
+    <h1>{{ list | join:'#'}}</h1>
+    <h1>{{ test | default:'good'}}</h1>
 
+    <!--加减乘除--->
+    <h1>num = {{num}}</h1>
+    <h1>{{ num | add:10 }}</h1>
+    <h1>{{ num | add:-5 }}</h1>
+    <!-- num / 1 * 5     ---->
+    <h1>{% widthratio num 1 5 %}</h1>
+    <!-- num / 5 * 1     ---->
+    <h1>{% widthratio num 5 1 %}</h1>
+
+    {# <h1>Linuxcao is a good man</h1> #}
+
+    <a href="{% url 'app:good' 2%}">登陆</a>
+
+    {{code}}
+    <!--HTML转义-->
+    {{ code | safe}}
+
+    {% autoescape off %}
+    {{code}}
+    {%endautoescape%}
 </body>
 </html>

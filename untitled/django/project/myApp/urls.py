@@ -37,4 +37,11 @@ urlpatterns = [
     url(r'^showmain/$',views.showmain),
     url(r'^quit/$',views.quit),
     url(r'^index1/$',views.index1),
+    url(r'^good/(\d+)/$',views.good,name="good"),
+    url(r'^base/$', views.base),
+    url(r'^main1/$', views.main1),
+    url(r'^detail/$', views.detail),
+    url(r'^postfile/$',views.postfile),
+    url(r'^showinfo/$',views.showinfo),
+    url(r'^verifycode/$',views.verifycode),
 ]
