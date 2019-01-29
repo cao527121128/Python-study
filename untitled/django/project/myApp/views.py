@@ -12,7 +12,8 @@ def index_html(request):
     return HttpResponseRedirect('/')
 
 def index(request):
-    return HttpResponse("caolinfeng is a good man")
+    #return HttpResponse("caolinfeng is a good man")
+    return render(request,'myApp/index.html')
 
 
 

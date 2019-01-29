@@ -47,4 +47,5 @@ urlpatterns = [
     url(r'^verifycodefile/$', views.verifycodefile),
     url(r'^verifycodecheck/$', views.verifycodecheck),
 
+
 ]
