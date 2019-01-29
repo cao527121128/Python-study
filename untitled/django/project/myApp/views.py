@@ -9,7 +9,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 
 #重定向 到主页
 def index_html(request):
-    return HttpResponseRedirect('/sunck')
+    return HttpResponseRedirect('/')
 
 def index(request):
     return HttpResponse("caolinfeng is a good man")
@@ -30,58 +30,8 @@ def grades(request):
 from models import Students
 def students(request):
     #去模型中取数据
-    studentsList = Students.stuObj2.all()
+    studentsList = Students.objects.all()
     #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
-    return render(request,'myApp/students.html',{"students":studentsList})
-
-def students2(request):
-    #去模型中取数据
-    #如果没有找到符合条件的对象，则返回"模型类.DoesNotExist"异常
-    studentsList = Students.stuObj2.get(sname = 'Linuxcao')
-
-    #如果找到多条符合条件的对象，则返回"模型类.MutilpleObjectsReturned"异常
-    #studentsList = Students.stuObj2.get(sgender= True)
-    #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
-    return HttpResponse("XXXXXXXXXXXXXXXX")
-
-# 显示前5条数据
-def students3(request):
-    #去模型中取数据
-    studentsList = Students.stuObj2.all()[0:5]
-    #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
-    return render(request,'myApp/students.html',{"students":studentsList})
-
-
-# 分页显示 每一页显示5条数据
-
-def stupage(request,page):
-    # 0-5  5-10  10-15
-    # page=1 显示 0-5
-    # page=2 显示 5-10
-    # page=3 显示 10-15
-    page = int(page)
-    #去模型中取数据
-    studentsList = Students.stuObj2.all()[(page-1)*5:page*5]
-    #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
-    return render(request,'myApp/students.html',{"students":studentsList})
-
-
-from django.db.models import Max
-def studentsearch(request):
-
-    #查询所有名字包含"zhang'的学生信息
-    #studentsList = Students.stuObj2.filter(sname__contains='zhang')
-    #studentsList = Students.stuObj2.filter(sname__startswith='zhang')
-    #查询pk值在[2,4,6,8]范围的学生信息
-    #studentsList = Students.stuObj2.filter(pk__in=[2,4,6,8])
-    #查询年龄大于30的学生信息
-    #studentsList = Students.stuObj2.filter(sage__gt=30)
-    # 查询最后修改时间日期是2017年的学生信息
-    studentsList = Students.stuObj2.filter(lastTime__year=2017)
-
-    maxAge = Students.stuObj2.aggregate(Max('sage'))
-    print(maxAge)
-    # 将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
     return render(request,'myApp/students.html',{"students":studentsList})
 
 
@@ -103,7 +53,7 @@ def addstudent(request):
     stu.save()
 
     # 去模型中取数据 应该包含新添加的'liudehua'
-    studentsList = Students.stuObj2.all()
+    studentsList = Students.objects.all()
     # 将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
     return render(request,'myApp/students.html',{"students":studentsList})
 
@@ -111,13 +61,67 @@ def addstudent2(request):
     #获取指定的班级
     grade = Grades.objects.get(pk=1)
     #创建学生对象
-    stu = Students.stuObj2.createStudent('zhangxueyou',True,53,'i am zhangxueyou',grade,'2019-01-25','2019-01-25')
+    stu = Students.createStudent('zhangxueyou',True,53,'i am zhangxueyou',grade,'2019-01-25','2019-01-25')
     stu.save()
 
     # 去模型中取数据 应该包含新添加的'liudehua'
-    studentsList = Students.stuObj2.all()
+    studentsList = Students.objects.all()
     # 将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
     return render(request,'myApp/students.html',{"students":studentsList})
+
+
+
+def students2(request):
+    #去模型中取数据
+    #如果没有找到符合条件的对象，则返回"模型类.DoesNotExist"异常
+    studentsList = Students.objects.get(sname = 'Linuxcao')
+
+    #如果找到多条符合条件的对象，则返回"模型类.MutilpleObjectsReturned"异常
+    #studentsList = Students.stuObj2.get(sgender= True)
+    #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
+    return HttpResponse("XXXXXXXXXXXXXXXX")
+
+# 显示前5条数据
+def students3(request):
+    #去模型中取数据
+    studentsList = Students.objects.all()[0:5]
+    #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
+    return render(request,'myApp/students.html',{"students":studentsList})
+
+
+# 分页显示 每一页显示5条数据
+
+def stupage(request,page):
+    # 0-5  5-10  10-15
+    # page=1 显示 0-5
+    # page=2 显示 5-10
+    # page=3 显示 10-15
+    page = int(page)
+    #去模型中取数据
+    studentsList = Students.objects.all()[(page-1)*5:page*5]
+    #将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
+    return render(request,'myApp/students.html',{"students":studentsList})
+
+
+from django.db.models import Max
+def studentsearch(request):
+
+    #查询所有名字包含"zhang'的学生信息
+    #studentsList = Students.stuObj2.filter(sname__contains='zhang')
+    #studentsList = Students.stuObj2.filter(sname__startswith='zhang')
+    #查询pk值在[2,4,6,8]范围的学生信息
+    #studentsList = Students.stuObj2.filter(pk__in=[2,4,6,8])
+    #查询年龄大于30的学生信息
+    #studentsList = Students.stuObj2.filter(sage__gt=30)
+    # 查询最后修改时间日期是2017年的学生信息
+    studentsList = Students.objects.filter(lastTime__year=2017)
+
+    maxAge = Students.objects.aggregate(Max('sage'))
+    print(maxAge)
+    # 将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
+    return render(request,'myApp/students.html',{"students":studentsList})
+
+
 
 from django.db.models import F,Q
 def fgrades(request):
@@ -136,7 +140,7 @@ def qstudents(request):
     #返回Pk<=3的学生
     #studentsList = Students.stuObj2.filter(Q(pk__lte=3))
     #返回pk >3的学生
-    studentsList = Students.stuObj2.filter(~Q(pk__lte=3))
+    studentsList = Students.objects.filter(~Q(pk__lte=3))
     # 将数据传递给模板，模板再渲染页面，并将渲染好的页面返回给浏览器
     return render(request, 'myApp/students.html', {"students": studentsList})
 
@@ -212,7 +216,7 @@ def redirect1(request):
     #return HttpResponseRedirect('/sunck/redirect2')
 
     #简写方式：使用redirect
-    return redirect('/sunck/redirect2')
+    return redirect('/redirect2')
 
 def redirect2(request):
     return HttpResponse('我是重定向之后的视图')
@@ -234,7 +238,7 @@ def  showmain(request):
     #在服务端 django创建的HttpRequest对象request中存储session值
     request.session['name'] = username
     #request.session.set_expiry(10)
-    return HttpResponseRedirect('/sunck/main/')
+    return HttpResponseRedirect('/main/')
 
 from django.contrib.auth import logout
 def quit(request):
@@ -242,7 +246,7 @@ def quit(request):
     logout(request)
     #request.session.clear()
     #request.session.flush()
-    return HttpResponseRedirect('/sunck/main/')
+    return HttpResponseRedirect('/main/')
 
 
 def index1(request):
@@ -254,7 +258,7 @@ def index1(request):
     return render(request,'myApp/index1.html',{"num":10,"stu":student,"students":students_list,"num1":num1,"num2":num2,
                                                "str":str,"list":["good","nice","handsome"],"test":False,
                                                "code":"<h1>Linuxcao is a nice man</h1>"})
-    return render(request,'myApp/index1.html',{"code":"<h1>Linuxcao is a nice man</h1>"})
+
 
 def good(request,id):
     num = id
@@ -331,7 +335,7 @@ def verifycode(request):
     del draw
 
     #存入session 用于做进一步的验证
-    #request.session['verifycode'] = rand_str
+    request.session['verify'] = rand_str
 
     #内存文件操作
     import io
@@ -342,5 +346,24 @@ def verifycode(request):
 
     #将内存中的图片数据返回给客户端，MIME类型为png
     return HttpResponse(buf.getvalue(),'image/png')
+
+from django.shortcuts import render,redirect
+
+def verifycodefile(request):
+
+    str = "请重新输入验证码"
+    return render(request,'myApp/verifycodefile.html',{"flag":str})
+
+
+
+def verifycodecheck(request):
+    code1 = request.POST.get('verifycode').upper()
+    code2 = request.session['verify'].upper()
+    if code1 == code2:
+        return render(request,'myApp/success.html')
+    else:
+        request.session["flag"] = False
+        return redirect('/verifycodefile/')
+
 
 

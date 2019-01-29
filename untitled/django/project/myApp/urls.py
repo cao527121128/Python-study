@@ -9,7 +9,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^index.html/$', views.index_html),
-    url(r'^(\d+)/(\d+)/$', views.detail),
+    #url(r'^(\d+)/(\d+)/$', views.detail),
     url(r'^grades/$', views.grades),
     url(r'^students/$', views.students),
     url(r'^grades/(\d+)$',views.gradesStudents),
@@ -44,4 +44,7 @@ urlpatterns = [
     url(r'^postfile/$',views.postfile),
     url(r'^showinfo/$',views.showinfo),
     url(r'^verifycode/$',views.verifycode),
+    url(r'^verifycodefile/$', views.verifycodefile),
+    url(r'^verifycodecheck/$', views.verifycodecheck),
+
 ]
