@@ -64,3 +64,8 @@ class StudentsAdmin(admin.ModelAdmin):
     ]
 #注册方式2：使用admin.site.register方法注册
 #admin.site.register(Students,StudentsAdmin)
+
+
+#注册 Text 类
+from models import Text
+admin.site.register(Text)

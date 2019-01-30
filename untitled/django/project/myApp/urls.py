@@ -46,6 +46,12 @@ urlpatterns = [
     url(r'^verifycode/$',views.verifycode),
     url(r'^verifycodefile/$', views.verifycodefile),
     url(r'^verifycodecheck/$', views.verifycodecheck),
+    url(r'^upfile/$',views.upfile),
+    url(r'^savefile/$', views.savefile),
+    url(r'^studentpage/(\d+)/$', views.studentpage),
 
-
+    url(r'^ajaxstudents/$', views.ajaxstudents),
+    url(r'^studentsinfo/$',views.studentsinfo),
+    url(r'^edit/$',views.edit),
+    url(r'^celery/$', views.celery),
 ]

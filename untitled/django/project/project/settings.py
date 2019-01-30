@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+# -*- coding: utf-8 -*-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myApp',
+    'tinymce',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middleware.myApp.myMiddle.MyMiddle'
+    # 'middleware.myApp.myMiddle.MyMiddle'
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -138,3 +140,20 @@ STATICFILES_DIRS = [ os.path.join(BASE_DIR,'static')]
 # Priority to read from the local cache, if not read to the database to read
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
+# upload file
+MEDIA_ROOT = os.path.join(BASE_DIR,'static/upfile')
+
+# tinymce
+TINYMCE_DEFAULT_CONFIG = {
+    'theme':'advanced',
+    'width':800,
+    'height':400,
+}
+
+#celery
+import djcelery
+djcelery.setup_loader()
+CELERY_IMPORTS=('myApp.task')
+
+BROKER_URL = 'redis://127.0.0.1:6379/0'
+BROKER_TRANSPORT = 'redis'

@@ -367,4 +367,69 @@ def verifycodecheck(request):
         return redirect('/verifycodefile/')
 
 
+# 上传文件
+import  os
+from django.conf import settings
+
+def upfile(request):
+    return render(request,'myApp/upfile.html')
+
+def savefile(request):
+    if request.method == "POST":
+        f = request.FILES["file"]
+        #文件在服务器端的路径
+        filePath = os.path.join(settings.MEDIA_ROOT,f.name)
+        with open(filePath,'wb') as fp:
+            for info in f.chunks():
+                fp.write(info)
+        return render(request,'myApp/savefile.html')
+    else:
+        return HttpResponse("上传失败")
+
+
+# 分页 paginator
+from models import Students
+from django.core.paginator import Paginator
+def studentpage(request,pageid):
+    #所有学生列表
+    allList = Students.objects.all()
+    #创建Paginator对象 将全部学生列表一共分成5页
+    paginator = Paginator(allList,5)
+    #获取第pageid页数据对象
+    page = paginator.page(pageid)
+
+    return render(request,'myApp/studentpage.html',{"students":page})
+
+
+
+#ajax json
+from django.http import JsonResponse
+def ajaxstudents(request):
+    return render(request,'myApp/ajaxstudents.html')
+
+def studentsinfo(request):
+    stus = Students.objects.all()
+    List = []
+    for stu in stus:
+        List.append([stu.sname,stu.sage])
+
+    print(List)
+    return JsonResponse({"data":List})
+
+#富文本
+def edit(request):
+    return render(request,'myApp/edit.html')
+
+
+#celery
+import time
+from .task import hello_world
+def celery(request):
+    hello_world.delay()
+    # print("Linuxcao is a nice man")
+    # time.sleep(5)
+    # print("Linuxcao is a handsome man")
+    return render(request, 'myApp/celery.html')
+
+
 
