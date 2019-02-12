@@ -12,11 +12,13 @@ if __name__ == "__main__":
     print("list=%s" %(config.options.get("list")))
 
     # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    # STATIC_DIR = os.path.join(BASE_DIR,"static")
-    #
-    # print("BASE_DIR==%s" %(BASE_DIR))
-    # print("STATIC_DIR==%s" % (STATIC_DIR))
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    STATIC_DIR = os.path.join(BASE_DIR,"static")
+    TEMPLATES_DIR = os.path.join(BASE_DIR,"templates")
+
+    print("BASE_DIR==%s" %(BASE_DIR))
+    print("STATIC_DIR==%s" % (STATIC_DIR))
+    print("TEMPLATES_DIR==%s" % (TEMPLATES_DIR))
     app = Application()
     httpServer = tornado.httpserver.HTTPServer(app)
     httpServer.bind(config.options.get("port"))

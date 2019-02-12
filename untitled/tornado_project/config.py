@@ -11,10 +11,11 @@ options = {
 settings = {
     "debug":True,
     # "autoreload":True,
-    # "compiled_templates_cache":False,
+    #"compiled_templates_cache":False,
     # "static_hash_cache":False,
     # "serve_traceback":True,
-    "static":os.path.join(BASE_DIR,"static"),
-    "templates":os.path.join(BASE_DIR,"templates"),
+    "static_path":os.path.join(BASE_DIR,"static"),
+    "template_path":os.path.join(BASE_DIR,"templates"),
+    # "autoescape":None,
 }
 
