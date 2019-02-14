@@ -3,6 +3,7 @@ import tornado.web
 from views import index
 import config
 import os
+from sunckMysql import SunckMySQL
 
 class Application(tornado.web.Application):
     def  __init__(self):
@@ -63,7 +64,39 @@ class Application(tornado.web.Application):
             #继承
             (r'/cart',index.CartHandler),
 
+            #数据库
+            (r'/students',index.StudentsHandler),
+
+            # 设置普通cookie
+            (r'/pcookie', index.PCookieHandler),
+
+            # 获取普通cookie
+            (r'/getpcookie', index.GetPCookieHandler),
+
+            # 清除普通cookie
+            (r'/clearpcookie',index.ClearPCookieHandler),
+
+            # 设置安全cookie
+            (r'/scookie', index.SCookieHandler),
+
+            # 获取安全cookie
+            (r'/getscookie', index.GetSCookieHandler),
+
+            #cookie计数 记录浏览器访问次数
+            (r'/cookienum',index.CookieNumHandler),
+
+            # cookie计数 记录浏览器访问次数 改进版本
+            (r'/cookiecount', index.CookieCountHandler),
+            (r'/post',index.PostHandler),
+
+            #用户验证
+            (r'/login',index.LoginHandler),
+            (r'/homes',index.HomesHandler),
+            (r'/carts', index.CartsHandler),
+
             #StaticFileHandler 要放在所有匹配路由的最下面
+            # r'/(.*)$'  表示匹配任何路由
+            # 告诉StaticFileHandler其中path目录中寻找静态文件
             (r'/(.*)$',tornado.web.StaticFileHandler,
              {
                 "path":os.path.join(config.BASE_DIR,"static/html"),
@@ -71,3 +104,14 @@ class Application(tornado.web.Application):
              }),
         ]
         super(Application,self).__init__(handlers,**config.settings)
+
+        self.db = SunckMySQL(config.mysql["host"],config.mysql["user"],config.mysql["passwd"],config.mysql["dbName"],config.mysql["port"])
+
+
+
+
+
+
+
+
+

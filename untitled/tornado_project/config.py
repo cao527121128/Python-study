@@ -7,6 +7,16 @@ options = {
     "list":["good","nice","handsome"]
 }
 
+
+#数据库配置
+mysql = {
+    "host":"127.0.0.1",
+    "user":"root",
+    "passwd":"qingcloud",
+    "dbName":"Linuxcao",
+    "port":3306
+
+}
 #配置
 settings = {
     "debug":True,
@@ -17,5 +27,8 @@ settings = {
     "static_path":os.path.join(BASE_DIR,"static"),
     "template_path":os.path.join(BASE_DIR,"templates"),
     # "autoescape":None,
+    "cookie_secret":"XX7KhLy0Sleq8PRIRKXv2KMIn4p80EuJk48jcz15LMU",
+    "xsrf_cookies":True,
+    "login_url":"/login"
 }
 

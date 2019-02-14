@@ -1,5 +1,6 @@
 #coding:utf-8
 from tornado.web import RequestHandler
+from tornado.web import authenticated
 import os
 import config
 
@@ -264,3 +265,161 @@ class TransHandler(RequestHandler):
 class CartHandler(RequestHandler):
     def get(self, *args, **kwargs):
         self.render("cart.html",title="cart")
+
+#数据库操作
+class StudentsHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        #数据库中插入一条学生信息 sname=linuxcao sage=32  sgrade_id=1
+        self.application.db.insert("insert into students (sname,sage,sgrade_id) values ('linuxcao',32,1)")
+        self.application.db.insert("insert into students (sname,sage,sgrade_id) values ('linuxcao',33,1)")
+
+        # 数据库中删除一条学生信息 sname=linuxcao sage = 32
+        self.application.db.delete("delete from students where sname='linuxcao' and sage=32")
+
+        # 更新数据库  修改姓名为linuxcao的学生的sage=20
+        self.application.db.update("update students set sage=20 where sname='linuxcao'")
+
+        #数据库获取students的全部学生信息
+        stus = self.application.db.get_all("select * from students")
+
+        # 数据库获取students的第一条学生信息
+        # stus = self.application.db.get_one("select * from students")
+        print(stus)
+
+        # self.write("ok")
+        self.render("students.html",stus = stus)
+
+#普通cookie
+class PCookieHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        # 设置普通cookie值
+        # 函数原型
+        # self.set_cookie(name,value,domain=None,expires=None,path="/",expires_days=None,**kwargs)
+        self.set_cookie("Linuxcao","good")
+        # self.set_header("Set-Cookie","Linuxcao=nice; Path=/")
+        self.write("ok")
+
+class GetPCookieHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        #获取普通cookie值
+        # 函数原型
+        # self.get_cookie(name,default=None)
+        cookie = self.get_cookie("Linuxcao","未登录")
+        print("cookie=%s" %(cookie))
+        self.write("ok")
+
+class ClearPCookieHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+        #删除名为name的，并且同时匹配path和domain的cookie
+        #函数原型
+        # self.clear_cookie(name,path="/",domain=None)
+        # self.clear_cookie("Linuxcao")
+
+        # 删除同时匹配了path和domain的所有cookie
+        # 函数原型
+        # self.clear_all_cookies(path="/",domain=None)
+        self.clear_all_cookies()
+        self.write("ok")
+
+class SCookieHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+        # 设置安全cookie
+        # 函数原型
+        # self.set_secure_cookie(name,value,expires_days=30,version=None,**kwargs)
+        self.set_secure_cookie("zhangmanyu","nice")
+        self.write("ok")
+
+        # "2|1:0|10:1550046062|10:zhangmanyu|8:bmljZQ==|f041e7e8b983d8eb85e81f2d62ecb40322033fdcee5cdbf38850a69369d09ee7"
+
+
+class GetSCookieHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+        #获取安全cookie
+        #函数原型
+        # self.get_secure_cookie(name,value=,max_age_days=31,min_version=None)
+        scookie = self.get_secure_cookie("zhangmanyu")
+        print("scookie=%s" %(scookie))
+        self.write("ok")
+
+class CookieNumHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+
+        count =self.get_cookie("count",None)
+        if not count:
+            count = 1
+        else:
+            count = int(count)
+            count += 1
+        self.set_cookie("count",str(count))
+        self.render("cookienum.html",count=count)
+
+
+#改进版本
+class CookieCountHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+        count = self.get_cookie("count","未登录")
+        self.render("cookienum.html",count=count)
+
+#将cookie的修改操作放在POST方法里面
+class PostHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+        self.render("post.html")
+    def post(self, *args, **kwargs):
+        pass
+        count = self.get_cookie("count",None)
+        if not count:
+            count = 1
+        else:
+            count = int(count)
+            count += 1
+        self.set_cookie("count",str(count))
+        self.redirect("/cookiecount")
+
+
+#用户验证
+class LoginHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+        next = self.get_argument("next","/")
+        url = "login?next="+next
+
+        self.render("login.html",url=url)
+
+    def post(self, *args, **kwargs):
+        pass
+        name = self.get_argument("username")
+        pwd = self.get_argument("passwd")
+        if name == "admin" and pwd == "qingcloud":
+            pass
+            next = self.get_argument("next","/")
+            self.redirect(next+"?flag=logined")
+        else:
+            pass
+            next = self.get_argument("next","/")
+            print(next)
+            self.redirect("/login?next="+next)
+class HomesHandler(RequestHandler):
+    def get_current_user(self):
+        flag = self.get_argument("flag",None)
+        return flag
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        pass
+        self.render("homes.html")
+
+class CartsHandler(RequestHandler):
+    def get_current_user(self):
+        flag = self.get_argument("flag",None)
+        return flag
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        pass
+        self.render("carts.html")
+
