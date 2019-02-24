@@ -94,6 +94,15 @@ class Application(tornado.web.Application):
             (r'/homes',index.HomesHandler),
             (r'/carts', index.CartsHandler),
 
+            (r'/getstudents1',index.GetStudents1Handler),
+            (r'/getstudents2', index.GetStudents2Handler),
+            (r'/getstudents3', index.GetStudents3Handler),
+            (r'/gethome',index.GetHomeHandler),
+
+            #websocket实现在线聊天  QQ群聊
+            (r'/chathome',index.ChatHomeHandler),
+            (r'/chat',index.ChatHandler),
+
             #StaticFileHandler 要放在所有匹配路由的最下面
             # r'/(.*)$'  表示匹配任何路由
             # 告诉StaticFileHandler其中path目录中寻找静态文件

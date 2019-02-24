@@ -3,6 +3,12 @@ from tornado.web import RequestHandler
 from tornado.web import authenticated
 import os
 import config
+import time
+from tornado.httpclient import AsyncHTTPClient
+from tornado.web import asynchronous
+import json
+import tornado
+from tornado.websocket import WebSocketHandler
 
 class IndexHandler(RequestHandler):
     def get(self, *args, **kwargs):
@@ -423,3 +429,111 @@ class CartsHandler(RequestHandler):
         pass
         self.render("carts.html")
 
+# 回调函数实现异步web请求
+class GetStudents1Handler(RequestHandler):
+    def on_response(self,response):
+        print("on_response")
+        if response.error:
+            self.send_error(500)
+        else:
+            # data = json.loads(response.body)
+            data = "rony is a good girl"
+            self.write(data)
+        #手动关闭通信通道
+        self.finish()
+
+    #@tornado.web.asynchronous装饰器作用：不关闭通信通道 get结束之后不自动关闭通信通道,
+    # 这样才可以保证回调函数on_response使用self.write(data)返回数据给客户端浏览器
+    # 但是需要在on_response中使用finish()手动关闭通信通道
+    @tornado.web.asynchronous
+    def get(self, *args, **kwargs):
+        #获取所有学生的信息
+        # time.sleep(30)
+        url = "http://rony.qingdesktop.com"
+        #创建客户端
+        client = AsyncHTTPClient()
+        client.fetch(url,self.on_response)
+        # self.write("OK")
+
+
+
+#协程实现异步web请求
+class GetStudents2Handler(RequestHandler):
+    @tornado.gen.coroutine
+    def get(self, *args, **kwargs):
+        #获取所有学生的信息
+        # time.sleep(30)
+        url = "http://rony.qingdesktop.com"
+        #创建客户端
+        client = AsyncHTTPClient()
+        res = yield client.fetch(url)
+        if res.error:
+            self.send_error(500)
+        else:
+            # data = json.loads(res.body)
+            data = "rony is a good girl"
+            self.write(data)
+
+
+#协程实现异步web请求
+class GetStudents3Handler(RequestHandler):
+    @tornado.gen.coroutine
+    def get(self, *args, **kwargs):
+        res = yield self.getData()
+        self.write(res)
+
+    #耗时操作写在getData函数里面
+    @tornado.gen.coroutine
+    def getData(self):
+        url = "http://rony.qingdesktop.com"
+        # 创建客户端
+        client = AsyncHTTPClient()
+        res = yield client.fetch(url)
+        if res.error:
+            ret = {"ret":0}
+        else:
+            # data = json.loads(res.body)
+            data = "rony is a handsome girl"
+            ret = data
+        raise tornado.gen.Return(ret)  #相当于gen.send()
+
+
+
+
+
+
+
+class GetHomeHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        self.write("Home")
+
+class ChatHomeHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        self.render("chathome.html")
+
+class ChatHandler(WebSocketHandler):
+    #所有客户端
+    users = []
+    def open(self, *args, **kwargs):
+        self.users.append(self)
+        # print("open")
+        # print(self.users)
+        for user in self.users:
+            #user代表每一个客户端
+            #user.write_message() 给每一个客户端发送message数据
+            user.write_message("%s 登陆了" %(self.request.remote_ip))
+
+    def on_message(self, message):
+        for user in self.users:
+            user.write_message(u"%s 说:%s" %(self.request.remote_ip,message))
+
+    def on_close(self):
+        self.users.remove(self)
+        for user in self.users:
+            user.write_message("%s 退出了" %(self.request.remote_ip))
+
+    def close(self, code=None, reason=None):
+        pass
+
+    def check_origin(self, origin):
+        return True
